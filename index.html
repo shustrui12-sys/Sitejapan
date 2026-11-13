@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Японский уголок — манга, фигурки и японская поп-культура в Санкт-Петербурге.">
+  <meta name="theme-color" content="#100d1c">
+  <title>Японский уголок — манга и японская культура</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700;800&display=swap');
+
+    :root {
+      --bg: #100d1c;
+      --surface: #19142a;
+      --surface-2: #211a36;
+      --surface-3: #2b2145;
+      --text: #f7f3ff;
+      --muted: #aaa1c2;
+      --pink: #ff4d96;
+      --cyan: #45e6d2;
+      --yellow: #ffd66e;
+      --line: rgba(205, 184, 255, .14);
+      --radius: 22px;
+      --shadow: 0 22px 70px rgba(0,0,0,.32);
+      --font: 'Manrope', system-ui, sans-serif;
+      --display: 'Unbounded', 'Manrope', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+    body {
+      min-width: 320px;
+      background:
+        radial-gradient(ellipse at 12% 5%, rgba(255,77,150,.10), transparent 34rem),
+        radial-gradient(ellipse at 92% 32%, rgba(69,230,210,.07), transparent 30rem),
+        var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+    body.modal-open { overflow: hidden; }
+    a { color: inherit; text-decoration: none; }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    img { display: block; max-width: 100%; }
+    :focus-visible { outline: 3px solid var(--cyan); outline-offset: 4px; }
+    .container { width: min(1160px, calc(100% - 40px)); margin-inline: auto; }
+    .section { padding: 100px 0; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 9px;
+      color: var(--cyan); font-size: .76rem; font-weight: 800;
+      letter-spacing: .16em; text-transform: uppercase;
+    }
+    .eyebrow::before { content: ''; width: 22px; height: 1px; background: currentColor; }
+    .section-heading { max-width: 680px; margin-bottom: 38px; }
+    .section-heading h2 {
+      margin-top: 12px; font: 700 clamp(1.8rem, 4vw, 3rem)/1.15 var(--display);
+      letter-spacing: -.055em;
+    }
+    .section-heading p { margin-top: 15px; color: var(--muted); max-width: 570px; }
+    .accent { color: var(--pink); }
+    .btn {
+      display: inline-flex; justify-content: center; align-items: center; gap: 10px;
+      min-height: 50px; padding: 0 22px; border: 1px solid transparent;
+      border-radius: 14px; font-weight: 800; transition: .22s ease;
+    }
+    .btn-primary { background: var(--pink); color: #1a0d18; box-shadow: 0 10px 30px rgba(255,77,150,.22); }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 36px rgba(255,77,150,.34); }
+    .btn-secondary { border-color: var(--line); background: rgba(255,255,255,.035); }
+    .btn-secondary:hover { border-color: var(--cyan); color: var(--cyan); }
+    .icon { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 11px; background: rgba(69,230,210,.10); color: var(--cyan); }
+
+    /* Header */
+    .header {
+      position: sticky; top: 0; z-index: 50;
+      border-bottom: 1px solid transparent;
+      background: rgba(16,13,28,.78); backdrop-filter: blur(18px);
+      transition: border-color .2s, background .2s;
+    }
+    .header.scrolled { border-color: var(--line); background: rgba(16,13,28,.94); }
+    .header-inner { min-height: 78px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { display: inline-flex; align-items: center; gap: 12px; font-weight: 900; }
+    .brand-mark {
+      width: 42px; height: 42px; display: grid; place-items: center; border-radius: 13px;
+      background: linear-gradient(135deg, var(--pink), #9c6aff 55%, var(--cyan));
+      color: white; font: 800 .85rem var(--display); box-shadow: 0 8px 25px rgba(255,77,150,.2);
+    }
+    .brand-name { font: 700 .95rem var(--display); letter-spacing: -.04em; }
+    .nav { display: flex; align-items: center; gap: 30px; }
+    .nav a { color: var(--muted); font-size: .9rem; font-weight: 700; transition: color .2s; }
+    .nav a:hover { color: var(--text); }
+    .header-cta { min-height: 42px; padding-inline: 17px; font-size: .86rem; }
+    .menu-toggle { display: none; width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 12px; color: var(--text); background: var(--surface); font-size: 1.25rem; }
+
+    /* Hero */
+    .hero { position: relative; isolation: isolate; padding: 112px 0 96px; overflow: hidden; }
+    .hero::before, .hero::after {
+      content: ''; position: absolute; z-index: -1; border-radius: 50%; filter: blur(2px); pointer-events: none;
+    }
+    .hero::before { width: 480px; height: 480px; right: -100px; top: -110px; border: 1px solid rgba(69,230,210,.17); box-shadow: 0 0 0 35px rgba(69,230,210,.025), 0 0 0 75px rgba(69,230,210,.018); }
+    .hero::after { width: 360px; height: 360px; right: 5%; top: 5%; background: radial-gradient(circle, rgba(255,77,150,.17), transparent 68%); }
+    .hero-grid { display: grid; grid-template-columns: 1.08fr .92fr; align-items: center; gap: 54px; }
+    .hero-copy { position: relative; z-index: 2; }
+    .hero-label {
+      display: inline-flex; align-items: center; gap: 9px; padding: 8px 13px;
+      border: 1px solid rgba(255,214,110,.28); border-radius: 999px;
+      background: rgba(255,214,110,.06); color: var(--yellow); font-size: .78rem; font-weight: 800;
+    }
+    .hero h1 { margin-top: 25px; max-width: 720px; font: 800 clamp(2.7rem, 6.2vw, 5.25rem)/1.08 var(--display); letter-spacing: -.075em; }
+    .hero h1 span { background: linear-gradient(100deg, var(--pink), #c28aff 50%, var(--cyan)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .hero-copy > p { max-width: 530px; margin-top: 24px; color: var(--muted); font-size: 1.08rem; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 13px; margin-top: 34px; }
+    .hero-note { display: flex; align-items: center; gap: 12px; margin-top: 40px; color: var(--muted); font-size: .82rem; }
+    .avatar-stack { display: flex; padding-left: 5px; }
+    .avatar-stack span { width: 28px; height: 28px; margin-left: -5px; display: grid; place-items: center; border: 2px solid var(--bg); border-radius: 50%; background: var(--surface-3); font-size: .78rem; }
+    .hero-art { position: relative; min-height: 470px; display: grid; place-items: center; }
+    .hero-orbit { position: absolute; width: min(100%, 470px); aspect-ratio: 1; border: 1px solid rgba(255,255,255,.10); border-radius: 50%; transform: rotate(-17deg); }
+    .hero-orbit::before, .hero-orbit::after { content: ''; position: absolute; border: 1px dashed rgba(255,77,150,.24); border-radius: 50%; inset: 28px; }
+    .hero-orbit::after { inset: 65px; border-color: rgba(69,230,210,.22); }
+    .hero-poster {
+      position: relative; width: min(78%, 340px); aspect-ratio: .78; overflow: hidden;
+      border: 1px solid rgba(255,255,255,.2); border-radius: 30px;
+      background:
+        linear-gradient(155deg, rgba(255,77,150,.18), transparent 42%),
+        linear-gradient(25deg, #241636, #38204b 48%, #172e3b);
+      box-shadow: var(--shadow), 0 0 80px rgba(255,77,150,.12);
+      transform: rotate(4deg);
+    }
+    .poster-sun { position: absolute; width: 170px; height: 170px; top: 55px; left: 50%; transform: translateX(-50%); border-radius: 50%; background: linear-gradient(145deg, #ff8eaa, #ff4d96 60%, #a45cff); box-shadow: 0 0 70px rgba(255,77,150,.3); }
+    .poster-mountain { position: absolute; bottom: 0; width: 100%; height: 48%; background: linear-gradient(145deg, #182d3b, #10101e); clip-path: polygon(0 75%, 24% 25%, 43% 60%, 66% 12%, 100% 76%, 100% 100%, 0 100%); }
+    .poster-mountain::after { content: ''; position: absolute; inset: 35% 0 0; background: linear-gradient(160deg, transparent, rgba(69,230,210,.18)); }
+    .poster-kanji { position: absolute; right: 22px; top: 22px; color: rgba(255,255,255,.75); font: 700 2.3rem var(--display); writing-mode: vertical-rl; }
+    .poster-caption { position: absolute; left: 24px; bottom: 25px; z-index: 2; font: 700 1.3rem var(--display); letter-spacing: -.06em; }
+    .poster-caption small { display: block; margin-top: 7px; color: var(--cyan); font: 800 .62rem var(--font); letter-spacing: .18em; }
+    .float-tag { position: absolute; z-index: 3; padding: 11px 15px; border: 1px solid var(--line); border-radius: 14px; background: rgba(33,26,54,.88); box-shadow: var(--shadow); font-size: .78rem; font-weight: 800; backdrop-filter: blur(10px); }
+    .float-tag.one { top: 18%; left: -2%; transform: rotate(-7deg); }
+    .float-tag.two { right: -1%; bottom: 17%; transform: rotate(6deg); color: var(--cyan); }
+
+    /* About */
+    .about-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .about-card { padding: 28px; border: 1px solid var(--line); border-radius: var(--radius); background: linear-gradient(145deg, rgba(33,26,54,.92), rgba(25,20,42,.82)); transition: transform .25s, border-color .25s; }
+    .about-card:hover { transform: translateY(-6px); border-color: rgba(69,230,210,.42); }
+    .about-card .icon { width: 48px; height: 48px; margin-bottom: 22px; font-size: 1.35rem; }
+    .about-card h3 { margin-bottom: 9px; font: 700 1.08rem var(--display); }
+    .about-card p { color: var(--muted); font-size: .92rem; }
+
+    /* Catalog */
+    .catalog { background: linear-gradient(180deg, transparent, rgba(33,26,54,.30), transparent); }
+    .catalog-top { display: flex; justify-content: space-between; align-items: end; gap: 24px; }
+    .catalog-tools { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 30px; }
+    .search-wrap { position: relative; flex: 1 1 230px; }
+    .search-wrap input {
+      width: 100%; height: 46px; padding: 0 15px 0 42px; border: 1px solid var(--line);
+      border-radius: 13px; outline: none; background: var(--surface); color: var(--text);
+    }
+    .search-wrap input:focus { border-color: var(--cyan); }
+    .search-icon { position: absolute; top: 50%; left: 15px; transform: translateY(-50%); color: var(--muted); }
+    .filter-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .filter-btn { min-height: 44px; padding: 0 15px; border: 1px solid var(--line); border-radius: 12px; color: var(--muted); background: var(--surface); font-size: .83rem; font-weight: 800; transition: .2s; }
+    .filter-btn:hover, .filter-btn.active { border-color: var(--pink); color: var(--text); background: rgba(255,77,150,.10); }
+    .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .product-card { overflow: hidden; border: 1px solid var(--line); border-radius: 19px; background: var(--surface); transition: transform .25s, border-color .25s, box-shadow .25s; }
+    .product-card:hover { transform: translateY(-7px); border-color: rgba(255,77,150,.45); box-shadow: 0 20px 45px rgba(0,0,0,.22); }
+    .product-visual { position: relative; display: grid; place-items: center; aspect-ratio: 1.18; overflow: hidden; background: var(--surface-2); }
+    .product-visual::before { content: ''; position: absolute; width: 210px; height: 210px; border-radius: 50%; background: var(--glow, rgba(255,77,150,.16)); filter: blur(4px); }
+    .product-visual .art { position: relative; z-index: 1; width: 64%; height: 72%; display: grid; place-items: center; overflow: hidden; border: 1px solid rgba(255,255,255,.13); border-radius: 13px; background: linear-gradient(145deg, rgba(255,255,255,.13), rgba(255,255,255,.025)); box-shadow: 0 20px 35px rgba(0,0,0,.28); font-size: clamp(3rem, 7vw, 5.3rem); transform: rotate(-5deg); transition: transform .3s ease; }
+    .product-visual .art img { width: 100%; height: 100%; object-fit: contain; border-radius: inherit; }
+    .product-card:hover .product-visual .art { transform: rotate(0deg) scale(1.03); }
+    .product-visual.figure .art { width: 58%; height: 82%; overflow: visible; border-color: transparent; border-radius: 18px; background: transparent; box-shadow: none; font-size: 5rem; transform: rotate(4deg); }
+    .product-visual.figure .art img { object-fit: contain; border-radius: 0; filter: drop-shadow(0 20px 30px rgba(0,0,0,.42)); }
+    .product-badge { position: absolute; z-index: 2; top: 14px; left: 14px; padding: 5px 10px; border-radius: 999px; background: var(--yellow); color: #24182a; font-size: .65rem; font-weight: 900; letter-spacing: .06em; }
+    .product-info { padding: 20px; }
+    .product-category { color: var(--cyan); font-size: .68rem; font-weight: 900; letter-spacing: .13em; text-transform: uppercase; }
+    .product-info h3 { margin-top: 7px; font-size: 1rem; font-weight: 800; }
+    .product-bottom { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 18px; }
+    .price { color: var(--pink); font: 700 1.3rem var(--display); letter-spacing: -.05em; }
+    .reserve-btn { padding: 10px 13px; border-radius: 10px; background: rgba(69,230,210,.12); color: var(--cyan); font-size: .78rem; font-weight: 900; transition: .2s; }
+    .reserve-btn:hover { background: var(--cyan); color: #10201e; }
+    .empty-state { display: none; padding: 38px; border: 1px dashed var(--line); border-radius: 18px; color: var(--muted); text-align: center; }
+    .empty-state.show { display: block; }
+
+    /* Community banner */
+    .community-card {
+      position: relative; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 30px;
+      padding: 44px; overflow: hidden; border: 1px solid rgba(255,77,150,.25); border-radius: 28px;
+      background: radial-gradient(circle at 90% 10%, rgba(69,230,210,.16), transparent 28%), linear-gradient(120deg, #291a3b, #1b1830 65%, #1b2934);
+    }
+    .community-card::after { content: '祭'; position: absolute; right: 19%; top: -55px; color: rgba(255,255,255,.035); font: 800 15rem var(--display); pointer-events: none; }
+    .community-card h2 { position: relative; z-index: 1; max-width: 620px; font: 700 clamp(1.5rem, 3.2vw, 2.5rem)/1.2 var(--display); letter-spacing: -.06em; }
+    .community-card p { position: relative; z-index: 1; max-width: 570px; margin-top: 13px; color: var(--muted); }
+    .community-card .btn { position: relative; z-index: 2; white-space: nowrap; }
+
+    /* Contacts + footer */
+    .contacts-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 22px; }
+    .contact-panel { padding: 30px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+    .contact-panel h3 { margin-bottom: 18px; font: 700 1rem var(--display); }
+    .contact-line { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+    .contact-line:last-child { border: 0; }
+    .contact-line .icon { flex: 0 0 36px; }
+    .contact-line strong { display: block; font-size: .9rem; }
+    .contact-line span, .contact-line a { color: var(--muted); font-size: .86rem; }
+    .hours-row { display: flex; justify-content: space-between; gap: 15px; padding: 12px 0; border-bottom: 1px dashed var(--line); color: var(--muted); font-size: .9rem; }
+    .hours-row strong { color: var(--text); }
+    .socials { display: flex; gap: 10px; margin-top: 20px; }
+    .social-link { padding: 9px 13px; border: 1px solid var(--line); border-radius: 10px; color: var(--muted); font-size: .82rem; font-weight: 800; }
+    .social-link:hover { border-color: var(--cyan); color: var(--cyan); }
+    .footer { padding: 28px 0; border-top: 1px solid var(--line); }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 20px; color: var(--muted); font-size: .8rem; }
+    .footer-note { color: rgba(170,161,194,.65); }
+
+    /* Modal */
+    .modal-backdrop { position: fixed; inset: 0; z-index: 100; display: none; place-items: center; padding: 20px; background: rgba(5,4,12,.76); backdrop-filter: blur(9px); }
+    .modal-backdrop.open { display: grid; }
+    .modal { position: relative; width: min(100%, 500px); max-height: min(90vh, 760px); overflow: auto; padding: 30px; border: 1px solid var(--line); border-radius: 24px; background: #1b152c; box-shadow: var(--shadow); animation: modal-in .2s ease-out; }
+    @keyframes modal-in { from { opacity: 0; transform: translateY(12px) scale(.98); } to { opacity: 1; transform: none; } }
+    .modal-close { position: absolute; top: 17px; right: 17px; width: 36px; height: 36px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); color: var(--text); font-size: 1.2rem; }
+    .modal h2 { padding-right: 40px; font: 700 1.35rem var(--display); }
+    .modal > p { margin: 10px 0 22px; color: var(--muted); font-size: .9rem; }
+    .form-field { display: grid; gap: 7px; margin-bottom: 15px; }
+    .form-field label { font-size: .82rem; font-weight: 800; }
+    .form-field input, .form-field textarea {
+      width: 100%; min-height: 46px; padding: 11px 13px; border: 1px solid var(--line);
+      border-radius: 11px; outline: none; background: #120f20; color: var(--text);
+    }
+    .form-field textarea { min-height: 85px; resize: vertical; }
+    .form-field input:focus, .form-field textarea:focus { border-color: var(--cyan); }
+    .form-hint { margin-top: 12px; color: var(--muted); font-size: .73rem; }
+    .modal .btn { width: 100%; margin-top: 5px; }
+    .toast { position: fixed; z-index: 120; right: 22px; bottom: 22px; max-width: min(420px, calc(100% - 44px)); padding: 15px 19px; border: 1px solid rgba(69,230,210,.35); border-radius: 14px; background: #1b2930; color: var(--text); box-shadow: var(--shadow); opacity: 0; transform: translateY(12px); pointer-events: none; transition: .25s; }
+    .toast.show { opacity: 1; transform: none; }
+
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr .8fr; gap: 20px; }
+      .hero-art { min-height: 390px; }
+      .about-grid, .product-grid { grid-template-columns: repeat(2, 1fr); }
+      .nav { gap: 18px; }
+    }
+    @media (max-width: 680px) {
+      .container { width: min(100% - 32px, 560px); }
+      .section { padding: 72px 0; }
+      .header-inner { min-height: 68px; }
+      .brand-name { font-size: .82rem; }
+      .header-cta { display: none; }
+      .menu-toggle { display: grid; place-items: center; }
+      .nav {
+        position: absolute; top: calc(100% + 1px); left: 0; right: 0; display: none;
+        align-items: stretch; gap: 0; padding: 10px 20px 18px; border-bottom: 1px solid var(--line);
+        background: rgba(16,13,28,.98);
+      }
+      .nav.open { display: flex; flex-direction: column; }
+      .nav a { padding: 13px 5px; border-bottom: 1px solid var(--line); }
+      .hero { padding: 72px 0 54px; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: clamp(2.45rem, 12vw, 4rem); }
+      .hero-copy > p { font-size: .98rem; }
+      .hero-art { min-height: 350px; margin-top: 8px; }
+      .hero-orbit { width: 330px; }
+      .hero-poster { width: 235px; }
+      .poster-sun { width: 130px; height: 130px; }
+      .float-tag.one { left: 3%; }
+      .float-tag.two { right: 2%; }
+      .about-grid, .product-grid, .contacts-grid { grid-template-columns: 1fr; }
+      .catalog-top { display: block; }
+      .catalog-tools { display: grid; }
+      .filter-list { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 5px; }
+      .filter-btn { flex: 0 0 auto; }
+      .community-card { grid-template-columns: 1fr; padding: 30px 24px; }
+      .community-card .btn { justify-self: start; }
+      .footer-inner { align-items: flex-start; flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a class="brand" href="#top" aria-label="Японский уголок — на главную">
+        <span class="brand-mark">YA</span><span class="brand-name">ЯПОНСКИЙ УГОЛОК</span>
+      </a>
+      <nav class="nav" id="nav" aria-label="Главная навигация">
+        <a href="#about">О нас</a><a href="#catalog">Каталог</a><a href="#community">Комьюнити</a><a href="#contacts">Контакты</a>
+      </nav>
+      <a class="btn btn-primary header-cta" href="#catalog">Смотреть каталог <span aria-hidden="true">↗</span></a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Открыть меню" aria-expanded="false" aria-controls="nav">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="top">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="hero-label">✦ Санкт-Петербург · место для своих</span>
+          <h1>Твой <span>японский уголок</span> в городе</h1>
+          <p>Манга, коллекционные фигурки и японская поп-культура. Заходи за любимым тайтлом — оставайся ради атмосферы.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#catalog">Исследовать каталог <span aria-hidden="true">↗</span></a>
+            <a class="btn btn-secondary" href="#about">Узнать о нас</a>
+          </div>
+          <div class="hero-note">
+            <div class="avatar-stack" aria-hidden="true"><span>🎴</span><span>🍡</span><span>🎌</span></div>
+            <span>Для тех, кто живёт историями</span>
+          </div>
+        </div>
+        <div class="hero-art" aria-label="Декоративная иллюстрация в японском стиле">
+          <div class="hero-orbit"></div>
+          <div class="hero-poster">
+            <div class="poster-sun"></div><div class="poster-mountain"></div>
+            <div class="poster-kanji">日本文化</div>
+            <div class="poster-caption">FIND YOUR<br>STORY<small>JAPANESE CORNER · SPB</small></div>
+          </div>
+          <div class="float-tag one">✦ Новые истории каждый день</div>
+          <div class="float-tag two">マンガ · FIGURES · CULTURE</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="eyebrow">Немного о нас</span>
+          <h2>Больше, чем просто <span class="accent">магазин</span></h2>
+          <p>Мы создали пространство, где можно найти любимые истории, открыть новые миры и встретить людей с похожими интересами.</p>
+        </div>
+        <div class="about-grid">
+          <article class="about-card reveal"><span class="icon">🏮</span><h3>Своя история</h3><p>«Японский уголок» вырос из маленькой полки с мангой в место встречи поклонников японской культуры.</p></article>
+          <article class="about-card reveal"><span class="icon">🤝</span><h3>Поможем выбрать</h3><p>Подскажем, с какого тома начать, поможем найти любимый тайтл и расскажем о коллекционных изданиях.</p></article>
+          <article class="about-card reveal"><span class="icon">🎎</span><h3>Общее увлечение</h3><p>Манга, фигурки, тематические встречи и общение. Здесь легко найти тех, кто понимает твой вайб.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section catalog" id="catalog">
+      <div class="container">
+        <div class="catalog-top">
+          <div class="section-heading reveal">
+            <span class="eyebrow">Выбрали для тебя</span>
+            <h2>Фавориты <span class="accent">уголка</span></h2>
+            <p>Небольшая подборка манги и фигурок. Используй поиск и фильтры, чтобы найти что-то по душе.</p>
+          </div>
+        </div>
+        <div class="catalog-tools reveal">
+          <div class="search-wrap"><span class="search-icon" aria-hidden="true">⌕</span><input id="searchInput" type="search" placeholder="Найти мангу или фигурку..." aria-label="Поиск по каталогу"></div>
+          <div class="filter-list" role="group" aria-label="Фильтр товаров">
+            <button class="filter-btn active" data-filter="all" aria-pressed="true">Все товары</button>
+            <button class="filter-btn" data-filter="manga" aria-pressed="false">Манга</button>
+            <button class="filter-btn" data-filter="figure" aria-pressed="false">Фигурки</button>
+          </div>
+        </div>
+        <div class="product-grid" id="productGrid">
+          <article class="product-card reveal" data-category="manga" data-name="One Piece">
+            <div class="product-visual" style="--glow:rgba(255,77,150,.22)"><span class="product-badge">ХИТ</span><div class="art"><img src="manga-one-piece.webp" alt="Обложка манги «One Piece»" loading="lazy" decoding="async"></div></div>
+            <div class="product-info"><span class="product-category">Приключения · Манга</span><h3>Манга «One Piece»</h3><div class="product-bottom"><span class="price">890 ₽</span><button class="reserve-btn" data-product="Манга «One Piece»">Забронировать ↗</button></div></div>
+          </article>
+          <article class="product-card reveal" data-category="manga" data-name="My Hero Academia">
+            <div class="product-visual" style="--glow:rgba(69,230,210,.18)"><div class="art"><img src="manga-mha.webp" alt="Обложка манги «My Hero Academia»" loading="lazy" decoding="async"></div></div>
+            <div class="product-info"><span class="product-category">Сёнэн · Манга</span><h3>Манга «My Hero Academia»</h3><div class="product-bottom"><span class="price">790 ₽</span><button class="reserve-btn" data-product="Манга «My Hero Academia»">Забронировать ↗</button></div></div>
+          </article>
+          <article class="product-card reveal" data-category="manga" data-name="Demon Slayer">
+            <div class="product-visual" style="--glow:rgba(255,120,90,.18)"><div class="art"><img src="manga-demon-slayer.webp" alt="Обложка манги «Demon Slayer»" loading="lazy" decoding="async"></div></div>
+            <div class="product-info"><span class="product-category">Тёмное фэнтези · Манга</span><h3>Манга «Demon Slayer»</h3><div class="product-bottom"><span class="price">850 ₽</span><button class="reserve-btn" data-product="Манга «Demon Slayer»">Забронировать ↗</button></div></div>
+          </article>
+          <article class="product-card reveal" data-category="manga" data-name="Dragon Ball Z">
+            <div class="product-visual" style="--glow:rgba(255,214,110,.19)"><span class="product-badge">КЛАССИКА</span><div class="art"><img src="manga-dbz.webp" alt="Обложка манги «Dragon Ball Z»" loading="lazy" decoding="async"></div></div>
+            <div class="product-info"><span class="product-category">Классика · Манга</span><h3>Манга «Dragon Ball Z»</h3><div class="product-bottom"><span class="price">920 ₽</span><button class="reserve-btn" data-product="Манга «Dragon Ball Z»">Забронировать ↗</button></div></div>
+          </article>
+          <article class="product-card reveal" data-category="figure" data-name="Фигурка Годжо">
+            <div class="product-visual figure" style="--glow:rgba(130,100,255,.24)"><span class="product-badge">ЛИМИТКА</span><div class="art"><img src="fig-gojo.webp" alt="Коллекционная фигурка Годжо" loading="lazy" decoding="async"></div></div>
+            <div class="product-info"><span class="product-category">Коллекция · Фигурка</span><h3>Фигурка Годжо</h3><div class="product-bottom"><span class="price">5 900 ₽</span><button class="reserve-btn" data-product="Фигурка Годжо">Забронировать ↗</button></div></div>
+          </article>
+          <article class="product-card reveal" data-category="figure" data-name="Фигурка Узуй Тенген">
+            <div class="product-visual figure" style="--glow:rgba(255,77,150,.20)"><span class="product-badge">ЛИМИТКА</span><div class="art"><img src="fig-tengen.webp" alt="Коллекционная фигурка Узуй Тенген" loading="lazy" decoding="async"></div></div>
+            <div class="product-info"><span class="product-category">Коллекция · Фигурка</span><h3>Фигурка Узуй Тенген</h3><div class="product-bottom"><span class="price">6 400 ₽</span><button class="reserve-btn" data-product="Фигурка Узуй Тенген">Забронировать ↗</button></div></div>
+          </article>
+        </div>
+        <div class="empty-state" id="emptyState">Ничего не найдено. Попробуй изменить запрос или фильтр.</div>
+      </div>
+    </section>
+
+    <section class="section" id="community">
+      <div class="container">
+        <div class="community-card reveal">
+          <div><span class="eyebrow">Твоя стая уже здесь</span><h2>Любишь обсуждать тайтлы до самого утра?</h2><p>Заглядывай в наше комьюнити: делимся находками, обсуждаем новинки и просто говорим о том, что любим.</p></div>
+          <a class="btn btn-primary" href="#contacts">Найти нас <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contacts">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="eyebrow">Будем рады видеть</span>
+          <h2>Заглядывай <span class="accent">в гости</span></h2>
+          <p>Наш уголок находится в самом центре Санкт-Петербурга. Приходи выбрать новый том или просто познакомиться.</p>
+        </div>
+        <div class="contacts-grid">
+          <div class="contact-panel reveal">
+            <h3>Контактная информация</h3>
+            <div class="contact-line"><span class="icon">📍</span><div><strong>Адрес</strong><span>Санкт-Петербург, Невский проспект, 32–34</span></div></div>
+            <div class="contact-line"><span class="icon">☎</span><div><strong>Телефон</strong><a href="tel:+78120000000">+7 (812) 000-00-00</a></div></div>
+            <div class="contact-line"><span class="icon">✉</span><div><strong>Почта</strong><a href="mailto:hello@japanese-corner.ru">hello@japanese-corner.ru</a></div></div>
+            <div class="socials"><a class="social-link" href="https://t.me/" target="_blank" rel="noopener noreferrer">✈ Telegram</a><a class="social-link" href="https://vk.com/" target="_blank" rel="noopener noreferrer">◉ ВКонтакте</a></div>
+          </div>
+          <div class="contact-panel reveal">
+            <h3>График работы</h3>
+            <div class="hours-row"><span>Понедельник — пятница</span><strong>12:00–21:00</strong></div>
+            <div class="hours-row"><span>Суббота — воскресенье</span><strong>12:00–22:00</strong></div>
+            <p style="margin-top:20px;color:var(--muted);font-size:.86rem">Самовывоз и бронирование — на месте. Перед визитом можно уточнить наличие товара.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <a class="brand" href="#top"><span class="brand-mark">YA</span><span class="brand-name">ЯПОНСКИЙ УГОЛОК</span></a>
+      <span>© 2026 Японский уголок. Учебный проект.</span>
+      <span class="footer-note">Сделано с любовью к японской культуре ♡</span>
+    </div>
+  </footer>
+
+  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <button class="modal-close" id="modalClose" aria-label="Закрыть окно">×</button>
+      <h2 id="modalTitle">Бронирование товара</h2>
+      <p>Оставь контактные данные — мы подготовим заявку на выбранный товар.</p>
+      <form id="bookingForm">
+        <div class="form-field"><label for="productName">Товар</label><input id="productName" name="product" readonly></div>
+        <div class="form-field"><label for="customerName">Твоё имя</label><input id="customerName" name="name" placeholder="Как к тебе обращаться?" required minlength="2"></div>
+        <div class="form-field"><label for="customerContact">Телефон или Telegram</label><input id="customerContact" name="contact" placeholder="@username или +7..." required></div>
+        <div class="form-field"><label for="customerComment">Комментарий (необязательно)</label><textarea id="customerComment" name="comment" placeholder="Например, удобное время для визита"></textarea></div>
+        <button class="btn btn-primary" type="submit">Подготовить заявку ↗</button>
+        <p class="form-hint">Демонстрационная форма для учебного проекта: данные никуда не отправляются.</p>
+      </form>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // Шапка меняет вид при прокрутке страницы.
+    const header = document.getElementById('header');
+    const updateHeader = () => header.classList.toggle('scrolled', window.scrollY > 12);
+    window.addEventListener('scroll', updateHeader, { passive: true });
+    updateHeader();
+
+    // Мобильная навигация.
+    const menuToggle = document.getElementById('menuToggle');
+    const nav = document.getElementById('nav');
+    menuToggle.addEventListener('click', () => {
+      const isOpen = nav.classList.toggle('open');
+      menuToggle.setAttribute('aria-expanded', String(isOpen));
+      menuToggle.setAttribute('aria-label', isOpen ? 'Закрыть меню' : 'Открыть меню');
+      menuToggle.textContent = isOpen ? '×' : '☰';
+    });
+    nav.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
+      nav.classList.remove('open');
+      menuToggle.setAttribute('aria-expanded', 'false');
+      menuToggle.setAttribute('aria-label', 'Открыть меню');
+      menuToggle.textContent = '☰';
+    }));
+
+    // Поиск и фильтрация каталога.
+    const searchInput = document.getElementById('searchInput');
+    const filterButtons = [...document.querySelectorAll('.filter-btn')];
+    const productCards = [...document.querySelectorAll('.product-card')];
+    const emptyState = document.getElementById('emptyState');
+    let activeFilter = 'all';
+
+    function filterProducts() {
+      const query = searchInput.value.trim().toLocaleLowerCase('ru');
+      let visibleCount = 0;
+      productCards.forEach(card => {
+        const matchesCategory = activeFilter === 'all' || card.dataset.category === activeFilter;
+        const matchesSearch = card.dataset.name.toLocaleLowerCase('ru').includes(query);
+        const visible = matchesCategory && matchesSearch;
+        card.hidden = !visible;
+        if (visible) visibleCount++;
+      });
+      emptyState.classList.toggle('show', visibleCount === 0);
+    }
+    searchInput.addEventListener('input', filterProducts);
+    filterButtons.forEach(button => button.addEventListener('click', () => {
+      activeFilter = button.dataset.filter;
+      filterButtons.forEach(item => {
+        const active = item === button;
+        item.classList.toggle('active', active);
+        item.setAttribute('aria-pressed', String(active));
+      });
+      filterProducts();
+    }));
+
+    // Модальное окно бронирования. Форма демонстрационная: без backend данные не отправляются.
+    const modalBackdrop = document.getElementById('modalBackdrop');
+    const modalClose = document.getElementById('modalClose');
+    const productName = document.getElementById('productName');
+    const customerName = document.getElementById('customerName');
+    const bookingForm = document.getElementById('bookingForm');
+    const toast = document.getElementById('toast');
+    let lastFocusedElement = null;
+
+    function openModal(product) {
+      lastFocusedElement = document.activeElement;
+      productName.value = product;
+      modalBackdrop.classList.add('open');
+      document.body.classList.add('modal-open');
+      customerName.focus();
+    }
+    function closeModal() {
+      modalBackdrop.classList.remove('open');
+      document.body.classList.remove('modal-open');
+      if (lastFocusedElement) lastFocusedElement.focus();
+    }
+    document.querySelectorAll('.reserve-btn').forEach(button => {
+      button.addEventListener('click', () => openModal(button.dataset.product));
+    });
+    modalClose.addEventListener('click', closeModal);
+    modalBackdrop.addEventListener('click', event => {
+      if (event.target === modalBackdrop) closeModal();
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && modalBackdrop.classList.contains('open')) closeModal();
+    });
+
+    let toastTimer;
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 3800);
+    }
+    bookingForm.addEventListener('submit', event => {
+      event.preventDefault();
+      if (!bookingForm.reportValidity()) return;
+      const formData = new FormData(bookingForm);
+      const name = String(formData.get('name')).trim();
+      const product = String(formData.get('product'));
+      closeModal();
+      bookingForm.reset();
+      showToast(`Спасибо, ${name}! Демозаявка на «${product}» сформирована. Для реальной отправки нужен сервер.`);
+    });
+
+    // Плавное появление блоков при прокрутке.
+    const revealElements = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      revealElements.forEach(element => observer.observe(element));
+    } else {
+      revealElements.forEach(element => element.classList.add('visible'));
+    }
+  </script>
+</body>
+</html>
