@@ -10,7 +10,22 @@ permissions:
   id-token: write
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install HTMLHint
+        run: npm install -g htmlhint
+      - name: Lint HTML
+        run: htmlhint "**/*.html" --config .htmlhintrc
+
   deploy:
+    needs: lint
     runs-on: ubuntu-latest
     environment:
       name: github-pages
